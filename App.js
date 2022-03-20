@@ -1,112 +1,68 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React,{useState} from 'react'
+import {SafeAreaView,StyleSheet, } from 'react-native'
+import Gasolina from './components/gasolina';
+import Etanol from './components/etanol';
+import Btncalc from './components/btnCalcular';
+import Resultado from './components/resultado';
+import ImgResultado from './components/imgResultado';
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default function App() {
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+  const [gasolina,setGasolina] = useState(0);
+  const [etanol,setEtanol] = useState(0);
+  const [resultado,setResultado] = useState("");
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const calcular = ()=>{
+  if (!gasolina || !etanol){
+    setResultado("Preencha todos os campos");
+    return
+    }
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+    let res
+    let calc=((etanol/gasolina)*100).toFixed(1)
+
+    if (calc>=70){
+      res="Gasolina"
+    }else{
+      res="Etanol"
+    }
+
+    alert('O Etanol esta custando' + calc + '% Gasolina. portanto é melhor abastecer com ' + res)
+    setResultado(res)
+  }
+
+const limpar = ()=>{
+  setResultado("");
+}
+
+const setarGasolina=(valor)=>{
+    limpar();
+    setGasolina(valor);
+}
+
+const setarEtanol=(valor)=>{
+  limpar();
+  setEtanol(valor);
+}
+
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={estilos.principal}>
+     <Gasolina aoModificar={setarGasolina} />
+     <Etanol aoModificar={setarEtanol}/>
+    <Btncalc aoPressionar={calcular}/>
+    <Resultado resultado={resultado}/>
+    <ImgResultado comb={resultado.charAt(0)}/>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+const estilos = StyleSheet.create({
+
+  principal:{
+    flex:1,
+    padding:10,
+  }
+
 });
-
-export default App;
